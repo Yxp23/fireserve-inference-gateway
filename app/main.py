@@ -6,8 +6,10 @@ with intelligent batching, health-aware routing, and real-time metrics.
 
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
+from pathlib import Path
 import asyncio
 import time
 
@@ -136,3 +138,18 @@ async def remove_backend(backend_id: str):
     """Remove a backend from the pool."""
     await gateway.remove_backend(backend_id)
     return {"status": "removed"}
+
+
+# ───────────────────────── Frontend ──────────────────────────
+
+
+FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
+
+
+@app.get("/ui")
+async def serve_frontend():
+    """Serve the FireServe dashboard UI."""
+    index = FRONTEND_DIR / "index.html"
+    if index.exists():
+        return FileResponse(index)
+    return JSONResponse({"error": "Frontend not found. Run from project root."}, 404)

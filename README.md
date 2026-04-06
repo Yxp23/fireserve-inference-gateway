@@ -84,7 +84,10 @@ pip install -r requirements.txt
 # Start the gateway
 uvicorn app.main:app --reload --port 8000
 
-# Test it
+# Open the dashboard
+# Visit http://localhost:8000/ui in your browser
+
+# Or test via CLI
 curl -X POST http://localhost:8000/v1/generate \
   -H "Content-Type: application/json" \
   -d '{"prompt": "a futuristic cityscape at sunset"}'
@@ -256,6 +259,8 @@ fireserve-inference-gateway/
 │   ├── gateway.py       # Core routing, batching, circuit breaker
 │   ├── metrics.py       # Metrics collector with percentile tracking
 │   └── models.py        # Pydantic request/response schemas
+├── frontend/
+│   └── index.html       # Dashboard UI (visit /ui)
 ├── tests/
 │   └── test_gateway.py  # 20 tests across 5 test suites
 ├── k8s/
