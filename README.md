@@ -11,6 +11,25 @@ A production-grade API gateway for serving image generation models with intellig
 
 ---
 
+## Demo
+
+**Dashboard UI** — real-time inference with GPU-accelerated image generation:
+
+![FireServe Dashboard](docs/demo-dashboard.png)
+
+**Live metrics** — latency tracking, backend pool monitoring, and stress testing:
+
+![FireServe Metrics](docs/demo-metrics.png)
+
+**Backend pool** — multiple GPU backends with request routing and logging:
+
+![FireServe Backends](docs/demo-backends.png)
+
+> Images generated on NVIDIA Tesla T4 GPU via SDXL-Turbo (fp16) with 4-step inference in ~2 seconds.
+
+---
+
+
 ## Why This Exists
 
 When serving generative AI models at scale, the hard problem isn't running inference — it's everything around it: routing requests to the right GPU, handling failures gracefully, batching requests for throughput, and monitoring performance in real time.
