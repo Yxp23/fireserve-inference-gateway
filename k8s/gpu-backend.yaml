@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fireserve-gpu-backend
+  labels:
+    app: fireserve
+    component: gpu-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fireserve
+      component: gpu-backend
+  template:
+    metadata:
+      labels:
+        app: fireserve
+        component: gpu-backend
+    spec:
+      containers:
+        - name: gpu-inference
+          image: fireserve-gpu-backend:latest
+          ports:
+            - containerPort: 8001
+              name: http
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+              cpu: "4000m"
+              memory: "8Gi"
+            requests:
+              nvidia.com/gpu: 1
+              cpu: "2000m"
+              memory: "4Gi"
+          env:
+            - name: MODEL_ID
+              value: "stabilityai/sdxl-turbo"
+            - name: TORCH_DTYPE
+              value: "float16"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 60
+            periodSeconds: 10
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-tesla-t4
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fireserve-gpu-backend
+  labels:
+    app: fireserve
+    component: gpu-backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8001
+      targetPort: 8001
+      protocol: TCP
+  selector:
+    app: fireserve
+    component: gpu-backend

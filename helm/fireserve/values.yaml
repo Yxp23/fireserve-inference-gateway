@@ -1,0 +1,48 @@
+replicaCount: 2
+
+image:
+  repository: fireserve-gateway
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+gateway:
+  logLevel: info
+  maxBatchSize: 8
+  requestTimeout: 30
+  batchWindowMs: 50
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilization: 70
+  targetMemoryUtilization: 80
+
+gpuBackend:
+  enabled: false
+  replicas: 1
+  modelId: "stabilityai/sdxl-turbo"
+  resources:
+    limits:
+      nvidia.com/gpu: 1
+      memory: 8Gi
+    requests:
+      memory: 4Gi
+
+monitoring:
+  prometheus:
+    enabled: true
+    scrapeInterval: 15s

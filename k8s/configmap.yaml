@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fireserve-config
+  labels:
+    app: fireserve
+data:
+  log_level: "info"
+  max_batch_size: "8"
+  request_timeout: "30"
+  batch_window_ms: "50"
